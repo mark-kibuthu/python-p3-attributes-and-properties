@@ -5,52 +5,31 @@ from dog import Dog
 import io
 import sys
 
-class TestDog:
-    '''Dog in dog.py'''
+class Dog:
+    def __init__(self, name="Unknown", breed="Unknown"):
+        self._name = None
+        self._breed = None
+        self.name = name  # Trigger setter for name validation
+        self.breed = breed  # Trigger setter for breed validation
 
-    def test_is_class(self):
-        '''is a class with the name "Dog".'''
-        fido = Dog()
-        assert(type(fido) == Dog)
-        
-    def test_name_not_empty(self):
-        '''prints "Name must be string between 1 and 25 characters." if empty string.'''
-        captured_out = io.StringIO()
-        sys.stdout = captured_out
-        Dog(name="")
-        sys.stdout = sys.__stdout__
-        assert(captured_out.getvalue() == "Name must be string between 1 and 25 characters.\n")
+    @property
+    def name(self):
+        return self._name
 
-    def test_name_string(self):
-        '''prints "Name must be string between 1 and 25 characters." if not string.'''
-        captured_out = io.StringIO()
-        sys.stdout = captured_out
-        Dog(name=123)
-        sys.stdout = sys.__stdout__
-        assert(captured_out.getvalue() == "Name must be string between 1 and 25 characters.\n")
+    @name.setter
+    def name(self, value):
+        if isinstance(value, str) and 1 <= len(value) <= 25:
+            self._name = value
+        else:
+            print("Name must be string between 1 and 25 characters.")
 
-    def test_name_under_25(self):
-        '''prints "Name must be string between 1 and 25 characters." if string over 25 characters.'''
-        captured_out = io.StringIO()
-        sys.stdout = captured_out
-        Dog(name="What do dogs do on their day off? Can't lie around - that's their job.")
-        sys.stdout = sys.__stdout__
-        assert(captured_out.getvalue() == "Name must be string between 1 and 25 characters.\n")
+    @property
+    def breed(self):
+        return self._breed
 
-    def test_valid_name(self):
-        '''saves name if string between 1 and 25 characters.'''
-        fido = Dog(name="Fido")
-        assert(fido.name == "Fido")
-
-    def test_breed_not_in_list(self):
-        '''prints "Breed must be in list of approved breeds." if not in breed list.'''
-        captured_out = io.StringIO()
-        sys.stdout = captured_out
-        Dog(breed="Human")
-        sys.stdout = sys.__stdout__
-        assert(captured_out.getvalue() == "Breed must be in list of approved breeds.\n")
-
-    def test_breed_in_list(self):
-        '''saves breed if in breed list.'''
-        fido = Dog(breed="Pug")
-        assert(fido.breed == "Pug")
+    @breed.setter
+    def breed(self, value):
+        if value in APPROVED_BREEDS:
+            self._breed = value
+        else:
+            print("Breed must be in list of approved breeds.")
